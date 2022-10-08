@@ -1,0 +1,57 @@
+1                       ICON                    "icon.ico"
+
+STRINGTABLE BEGIN
+    2               "Logic"
+END
+
+3 MENU
+{
+     POPUP "&File"
+     {
+          MENUITEM "&New\tCtrl+N", 100
+          MENUITEM "&Open\tCtrl+O", 101
+          MENUITEM "&Save\tCtrl+S", 102
+          MENUITEM "&Save as ...", 103
+          MENUITEM SEPARATOR
+          MENUITEM "&Print", 104
+          MENUITEM SEPARATOR
+          MENUITEM "&Exit\tAlt+F4", 105
+     }
+     POPUP "&Edit"
+     {
+          MENUITEM "&Undo\tCtrl+Z", 200
+          MENUITEM "&Redo\tCtrl+Y", 201
+          MENUITEM SEPARATOR
+          MENUITEM "&Cut\tCtrl+X", 202
+          MENUITEM "&Copy\tCtrl+C", 203
+          MENUITEM "&Paste\tCtrl+P", 204
+          MENUITEM "&Delete\tDelete", 205
+          MENUITEM SEPARATOR
+          MENUITEM "&All Select\tCtrl+A", 206
+     }
+     POPUP "&View"
+     {
+          MENUITEM "&Tool bar", 301
+          MENUITEM "&Status bar", 301
+     }
+     POPUP "&Tool"
+     {
+          MENUITEM "&Console", 400
+          MENUITEM SEPARATOR
+          MENUITEM "&Settings", 401
+     }
+     POPUP "&Window"
+     {
+          MENUITEM "&Input Window", 500
+          MENUITEM "&Output Window", 500
+          MENUITEM "&Property Window", 500
+     }
+     POPUP "&Help"
+     {
+          MENUITEM "&Content", 600
+          MENUITEM SEPARATOR
+          MENUITEM "&Check Update", 601
+          MENUITEM SEPARATOR
+          MENUITEM "&About\tF1", 602
+     }
+}

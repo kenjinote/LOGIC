@@ -26,7 +26,7 @@
 ## ダウンロード
 下記のURLから最新版のダウンロードが可能です。
 
-[https://github.com/kenjinote/Logic/](https://github.com/kenjinote/Logic/)
+[https://github.com/kenjinote/Logic/releases](https://github.com/kenjinote/Logic/releases)
 
 ## お問い合わせ
 TwitterのDMまで

@@ -1,7 +1,7 @@
 1                       ICON                    "icon.ico"
 
 STRINGTABLE BEGIN
-    2               "Logic"
+    2               "LOGIC"
 END
 
 3 MENU

@@ -1,5 +1,8 @@
 #![windows_subsystem = "windows"]
 
+mod node;
+use node::Node;
+
 use winapi::{
     um::{
         winuser::{RegisterClassW, WNDCLASSW, CS_HREDRAW, CS_VREDRAW,
@@ -42,6 +45,9 @@ fn main() {
             DispatchMessageW(&mut msg);
         }
     }
+
+    let n = Node::new(0.0, 0.0, 0.0, 0.0);
+
 }
 
 fn encode(source: &str) -> Vec<u16> {

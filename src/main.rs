@@ -1,7 +1,9 @@
-#![windows_subsystem = "windows"]
+//#![windows_subsystem = "windows"]
 
 mod node;
-use node::Node;
+use crate::node::Node;
+mod about;
+use crate::about::About;
 
 use winapi::{
     um::{
@@ -88,6 +90,8 @@ unsafe extern "system" fn win_proc(hwnd: HWND, msg: UINT, w_param: WPARAM, l_par
             let id = LOWORD(w_param as u32) as i32;
             if id == 105 {
                 SendMessageW(hwnd, WM_CLOSE, 0,0);
+            } else if id == 602 {
+                About::show(hwnd);
             }
         },
         WM_DESTROY => PostQuitMessage(0),

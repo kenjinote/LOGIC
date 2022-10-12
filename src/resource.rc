@@ -55,3 +55,14 @@ END
           MENUITEM "&About\tF1", 602
      }
 }
+
+4 DIALOGEX 0, 0, 170, 62
+STYLE -2134376248
+CAPTION "バージョン情報 LOGIC"
+FONT 9, "MS UI Gothic"
+BEGIN
+    ICON            1,-1,14,14,21,20
+    LTEXT           "LOGIC, バージョン 1.0",-1,42,14,114,8,128
+    LTEXT           "Copyright (c) 2022-",-1,42,26,114,8
+    DEFPUSHBUTTON   "OK",1,113,41,50,14,131072
+END

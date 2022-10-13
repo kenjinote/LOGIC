@@ -12,9 +12,12 @@ use winapi::{
                   CreateWindowExW, ShowWindow, SW_NORMAL, UpdateWindow,
                   GetMessageW, TranslateMessage, DispatchMessageW, MSG,
                   WM_DESTROY, PostQuitMessage, DefWindowProcW, WS_OVERLAPPEDWINDOW,
-                  CW_USEDEFAULT, MAKEINTRESOURCEW, SendMessageW, WM_CLOSE, WM_COMMAND},
+                  CW_USEDEFAULT, MAKEINTRESOURCEW, SendMessageW, WM_CLOSE, WM_COMMAND,
+                  SW_SHOWDEFAULT,
+                  },
         wingdi::{GetStockObject, WHITE_BRUSH},
         libloaderapi::{GetModuleHandleW, LoadStringW, },
+        shellapi::{ShellExecuteW},
     },
     shared::{
         windef::{HWND, HBRUSH},
@@ -25,6 +28,9 @@ use winapi::{
 use std::ptr;
 use std::mem;
 use std::mem::MaybeUninit;
+
+mod utility;
+use utility::encode;
 
 fn main() {
     unsafe {
@@ -50,10 +56,6 @@ fn main() {
 
     let n = Node::new(0.0, 0.0, 0.0, 0.0);
 
-}
-
-fn encode(source: &str) -> Vec<u16> {
-    source.encode_utf16().chain(Some(0)).collect()
 }
 
 unsafe fn register_wndclass(class_name: &[u16]) -> bool {
@@ -92,6 +94,8 @@ unsafe extern "system" fn win_proc(hwnd: HWND, msg: UINT, w_param: WPARAM, l_par
                 SendMessageW(hwnd, WM_CLOSE, 0,0);
             } else if id == 602 {
                 About::show(hwnd);
+            } else if id == 600 {
+                ShellExecuteW(hwnd, encode("open").as_ptr(), encode("https://github.com/kenjinote/LOGIC").as_ptr(), ptr::null(), ptr::null(), SW_SHOWDEFAULT);
             }
         },
         WM_DESTROY => PostQuitMessage(0),

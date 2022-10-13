@@ -1,4 +1,3 @@
-
 use winapi::{
     um::{
         winuser::{RegisterClassW, WNDCLASSW, CS_HREDRAW, CS_VREDRAW,
@@ -7,7 +6,8 @@ use winapi::{
                   GetMessageW, TranslateMessage, DispatchMessageW, MSG,
                   WM_DESTROY, PostQuitMessage, DefWindowProcW, WS_OVERLAPPEDWINDOW,
                   CW_USEDEFAULT, MAKEINTRESOURCEW, SendMessageW, WM_CLOSE, WM_COMMAND,
-                  WM_INITDIALOG, DialogBoxParamW, EndDialog},
+                  WM_INITDIALOG, DialogBoxParamW, EndDialog, SW_SHOWDEFAULT,
+                  },
         wingdi::{GetStockObject, WHITE_BRUSH},
         libloaderapi::{GetModuleHandleW, LoadStringW, },
     },
@@ -18,6 +18,8 @@ use winapi::{
 };
 
 use std::ptr;
+
+use crate::utility::encode;
 
 pub struct About {
 }

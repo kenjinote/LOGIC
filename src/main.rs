@@ -13,9 +13,9 @@ use winapi::{
                   GetMessageW, TranslateMessage, DispatchMessageW, MSG,
                   WM_DESTROY, PostQuitMessage, DefWindowProcW, WS_OVERLAPPEDWINDOW,
                   CW_USEDEFAULT, MAKEINTRESOURCEW, SendMessageW, WM_CLOSE, WM_COMMAND,
-                  SW_SHOWDEFAULT,
+                  SW_SHOWDEFAULT, WM_PAINT, BeginPaint, EndPaint, PAINTSTRUCT, WM_CREATE,
                   },
-        wingdi::{GetStockObject, WHITE_BRUSH},
+        wingdi::{GetStockObject, WHITE_BRUSH, TextOutW},
         libloaderapi::{GetModuleHandleW, LoadStringW, },
         shellapi::{ShellExecuteW},
     },
@@ -28,6 +28,7 @@ use winapi::{
 use std::ptr;
 use std::mem;
 use std::mem::MaybeUninit;
+
 
 mod utility;
 use utility::encode;
@@ -53,9 +54,6 @@ fn main() {
             DispatchMessageW(&mut msg);
         }
     }
-
-    let n = Node::new(0.0, 0.0, 0.0, 0.0);
-
 }
 
 unsafe fn register_wndclass(class_name: &[u16]) -> bool {
@@ -87,14 +85,32 @@ unsafe fn create_window(class_name: &[u16]) -> HWND {
 }
 
 unsafe extern "system" fn win_proc(hwnd: HWND, msg: UINT, w_param: WPARAM, l_param: LPARAM) -> LRESULT {
+    static mut list: Vec<Node> = Vec::new();
     match msg {
+        WM_CREATE => {
+            let node1 = Node::new(50.0, 50.0, 100.0, 100.0);
+            let node2 = Node::new(100.0, 100.0, 100.0, 100.0);
+
+            list.push(node1);
+            list.push(node2);
+        },
+        WM_PAINT => {
+            let mut ps : PAINTSTRUCT = MaybeUninit::uninit().assume_init();
+            let hdc = BeginPaint(hwnd, &mut ps);
+
+            for n in &mut list {
+                n.draw(hdc);
+            }
+
+            EndPaint(hwnd, &ps);
+        },
         WM_COMMAND => {
             let id = LOWORD(w_param as u32) as i32;
-            if id == 105 {
+            if id == 105 { // Exit
                 SendMessageW(hwnd, WM_CLOSE, 0,0);
-            } else if id == 602 {
+            } else if id == 602 { // About
                 About::show(hwnd);
-            } else if id == 600 {
+            } else if id == 600 { // Open URL
                 ShellExecuteW(hwnd, encode("open").as_ptr(), encode("https://github.com/kenjinote/LOGIC").as_ptr(), ptr::null(), ptr::null(), SW_SHOWDEFAULT);
             }
         },

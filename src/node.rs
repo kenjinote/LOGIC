@@ -1,14 +1,15 @@
+use winapi::um::wingdi::TextOutW;
+use crate::utility::encode;
+use winapi::shared::windef::{HDC};
+
 pub struct Node {
     x: f64,
     y: f64,
     width: f64,
     height: f64,
-
+    born: u32,
+    death: u32,
 }
-
-use winapi::um::wingdi::TextOutW;
-use crate::utility::encode;
-use winapi::shared::windef::{HDC};
 
 impl Node {
     pub fn new(x: f64, y: f64, width: f64, height: f64) -> Node {
@@ -17,12 +18,28 @@ impl Node {
             y: y,
             width: width,
             height: height,
+            born: 0,
+            death: u32::MAX,
         }
+    }
+
+    pub fn kill(&mut self, generation: u32) {
+        self.death = generation;
+    }
+
+    pub fn is_alive(&self, generation: u32) -> bool {
+        self.born <= generation && generation <= self.death
+    }
+
+    pub fn hit_test(&self, x: f64, y: f64, generation: u32) -> bool {
+
+        self.is_alive(generation) &&  x >= self.x && x <= self.x + self.width && y >= self.y && y <= self.y + self.height
     }
 
     pub fn draw(&self, hdc : HDC) {
         unsafe {
-            TextOutW(hdc, self.x as i32, self.y as i32, encode("Hello").as_ptr(), 5);
+            let text = self.born.to_string();
+            TextOutW(hdc, self.x as i32, self.y as i32, encode(&text).as_ptr(), text.len() as i32);
         }
     }
 

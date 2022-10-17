@@ -2,6 +2,8 @@
 
 mod node;
 use crate::node::Node;
+mod nodelist;
+use crate::nodelist::NodeList;
 mod about;
 use crate::about::About;
 
@@ -85,22 +87,20 @@ unsafe fn create_window(class_name: &[u16]) -> HWND {
 }
 
 unsafe extern "system" fn win_proc(hwnd: HWND, msg: UINT, w_param: WPARAM, l_param: LPARAM) -> LRESULT {
-    static mut list: Vec<Node> = Vec::new();
+    static mut nodelist: NodeList = NodeList::new();
     match msg {
         WM_CREATE => {
             let node1 = Node::new(50.0, 50.0, 100.0, 100.0);
             let node2 = Node::new(100.0, 100.0, 100.0, 100.0);
 
-            list.push(node1);
-            list.push(node2);
+            nodelist.add(node1);
+            nodelist.add(node2);
         },
         WM_PAINT => {
             let mut ps : PAINTSTRUCT = MaybeUninit::uninit().assume_init();
             let hdc = BeginPaint(hwnd, &mut ps);
 
-            for n in &mut list {
-                n.draw(hdc);
-            }
+            nodelist.draw(hdc);
 
             EndPaint(hwnd, &ps);
         },

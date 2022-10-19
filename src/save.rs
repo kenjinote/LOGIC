@@ -1,6 +1,6 @@
 use winapi::{
     um::{
-        commdlg::{GetOpenFileNameW, OFN_FILEMUSTEXIST, OPENFILENAMEW, OFN_PATHMUSTEXIST},
+        commdlg::{GetSaveFileNameW, OFN_ALLOWMULTISELECT, OFN_EXPLORER, OPENFILENAMEW},
         winuser::{RegisterClassW, WNDCLASSW, CS_HREDRAW, CS_VREDRAW,
                   LoadIconW, LoadCursorW, IDC_ARROW,
                   CreateWindowExW, ShowWindow, SW_NORMAL, UpdateWindow,
@@ -22,24 +22,24 @@ use std::ptr;
 
 use crate::utility::encode;
 
-pub struct Open {
+pub struct Save {
 }
 
-impl Open {
+impl Save {
     pub unsafe fn show(hparent: HWND) {
 
         let mut ofn: OPENFILENAMEW = std::mem::zeroed();
         let mut szFile: [u16; 260] = [0; 260];
-        let lpszTitle = encode("Open");
+        let lpszTitle = encode("Save");
         ofn.lStructSize = std::mem::size_of::<OPENFILENAMEW>() as u32;
         ofn.hwndOwner = hparent;
         ofn.lpstrFilter = encode("All\0*.*\0Text\0*.TXT\0").as_ptr();
         ofn.lpstrFile = szFile.as_mut_ptr();
         ofn.nMaxFile = 260;
-        ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
+        ofn.Flags = OFN_ALLOWMULTISELECT | OFN_EXPLORER;
         ofn.lpstrTitle = lpszTitle.as_ptr();
 
-        if GetOpenFileNameW(&mut ofn) != 0 {
+        if GetSaveFileNameW(&mut ofn) != 0 {
             //println!("File selected: {}", encode(&szFile));
         }
 

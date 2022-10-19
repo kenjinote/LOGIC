@@ -8,6 +8,8 @@ mod about;
 use crate::about::About;
 mod open;
 use crate::open::Open;
+mod save;
+use crate::save::Save;
 
 use winapi::{
     um::{
@@ -112,6 +114,8 @@ unsafe extern "system" fn win_proc(hwnd: HWND, msg: UINT, w_param: WPARAM, l_par
                 SendMessageW(hwnd, WM_CLOSE, 0,0);
             } else if id == 101 { // Open
                 Open::show(hwnd);
+            } else if id == 102 { // Save
+                Save::show(hwnd);
             } else if id == 602 { // About
                 About::show(hwnd);
             } else if id == 600 { // Open URL

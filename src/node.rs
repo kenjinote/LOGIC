@@ -1,4 +1,4 @@
-use winapi::um::wingdi::TextOutW;
+use winapi::um::wingdi::{TextOutW, Rectangle};
 use crate::utility::encode;
 use winapi::shared::windef::{HDC};
 
@@ -38,6 +38,7 @@ impl Node {
 
     pub fn draw(&self, hdc : HDC) {
         unsafe {
+            Rectangle(hdc, self.x as i32, self.y as i32, (self.x + self.width)  as i32, (self.y + self.height) as i32);
             let text = self.born.to_string();
             TextOutW(hdc, self.x as i32, self.y as i32, encode(&text).as_ptr(), text.len() as i32);
         }

@@ -21,6 +21,7 @@ use winapi::{
 use std::ptr;
 
 use crate::utility::encode;
+use crate::utility::decode;
 
 pub struct Save {
 }
@@ -31,16 +32,17 @@ impl Save {
         let mut ofn: OPENFILENAMEW = std::mem::zeroed();
         let mut szFile: [u16; 260] = [0; 260];
         let lpszTitle = encode("Save");
+        let lpstrFilter = encode("logic file\0*.logic\0All\0*.*\0");
         ofn.lStructSize = std::mem::size_of::<OPENFILENAMEW>() as u32;
         ofn.hwndOwner = hparent;
-        ofn.lpstrFilter = encode("All\0*.*\0Text\0*.TXT\0").as_ptr();
+        ofn.lpstrFilter = lpstrFilter.as_ptr();
         ofn.lpstrFile = szFile.as_mut_ptr();
         ofn.nMaxFile = 260;
         ofn.Flags = OFN_ALLOWMULTISELECT | OFN_EXPLORER;
         ofn.lpstrTitle = lpszTitle.as_ptr();
 
         if GetSaveFileNameW(&mut ofn) != 0 {
-            //println!("File selected: {}", encode(&szFile));
+            println!("File selected: {}", decode(&szFile[0]));
         }
 
     }

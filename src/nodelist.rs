@@ -47,6 +47,20 @@ impl NodeList {
         return None;
     }
 
+    pub fn select(&mut self, x: f64, y: f64) {
+        for i in 0..self.list.len() {
+            if self.list[i].hit_test(x, y, self.current_generation) {
+                self.list[i].select();
+            }
+        }
+    }
+
+    pub fn selectall(&mut self) {
+        for i in 0..self.list.len() {
+            self.list[i].select();
+        }
+    }
+
     pub fn draw(&self, hdc : HDC) {
         for i in 0..self.list.len() {
             self.list[i].draw(hdc);

@@ -20,6 +20,8 @@ use winapi::{
                   WM_DESTROY, PostQuitMessage, DefWindowProcW, WS_OVERLAPPEDWINDOW,
                   CW_USEDEFAULT, MAKEINTRESOURCEW, SendMessageW, WM_CLOSE, WM_COMMAND,
                   SW_SHOWDEFAULT, WM_PAINT, BeginPaint, EndPaint, PAINTSTRUCT, WM_CREATE,
+                  WM_LBUTTONDOWN, WM_LBUTTONUP, WM_MOUSEMOVE, WM_RBUTTONDOWN, WM_RBUTTONUP,
+
                   },
         wingdi::{GetStockObject, WHITE_BRUSH, TextOutW},
         libloaderapi::{GetModuleHandleW, LoadStringW, },
@@ -27,7 +29,7 @@ use winapi::{
     },
     shared::{
         windef::{HWND, HBRUSH},
-        minwindef::{UINT, WPARAM, LPARAM, LRESULT, LOWORD},
+        minwindef::{UINT, WPARAM, LPARAM, LRESULT, LOWORD, HIWORD},
     },
 };
 
@@ -92,6 +94,7 @@ unsafe fn create_window(class_name: &[u16]) -> HWND {
 
 unsafe extern "system" fn win_proc(hwnd: HWND, msg: UINT, w_param: WPARAM, l_param: LPARAM) -> LRESULT {
     static mut nodelist: NodeList = NodeList::new();
+    static mut drag: bool = false;
     match msg {
         WM_CREATE => {
             let node1 = Node::new(50.0, 50.0, 100.0, 100.0);
@@ -99,6 +102,12 @@ unsafe extern "system" fn win_proc(hwnd: HWND, msg: UINT, w_param: WPARAM, l_par
 
             nodelist.add(node1);
             nodelist.add(node2);
+        },
+        WM_LBUTTONDOWN => {
+            let x = LOWORD(l_param as u32) as f32;
+            let y = HIWORD(l_param as u32) as f32;
+            nodelist.select(x as f64, y as f64);
+            drag = true;
         },
         WM_PAINT => {
             let mut ps : PAINTSTRUCT = MaybeUninit::uninit().assume_init();
@@ -110,16 +119,23 @@ unsafe extern "system" fn win_proc(hwnd: HWND, msg: UINT, w_param: WPARAM, l_par
         },
         WM_COMMAND => {
             let id = LOWORD(w_param as u32) as i32;
-            if id == 105 { // Exit
-                SendMessageW(hwnd, WM_CLOSE, 0,0);
-            } else if id == 101 { // Open
-                Open::show(hwnd);
-            } else if id == 102 { // Save
-                Save::show(hwnd);
-            } else if id == 602 { // About
-                About::show(hwnd);
-            } else if id == 600 { // Open URL
-                ShellExecuteW(hwnd, encode("open").as_ptr(), encode("https://github.com/kenjinote/LOGIC").as_ptr(), ptr::null(), ptr::null(), SW_SHOWDEFAULT);
+            match id {
+                105 => {// Exit
+                    SendMessageW(hwnd, WM_CLOSE, 0,0);
+                },
+                101 => {// Open
+                    Open::show(hwnd);
+                },
+                102 => {// Save
+                    Save::show(hwnd);
+                },
+                602 => {// About
+                    About::show(hwnd);
+                },
+                600 => {// Open URL
+                    ShellExecuteW(hwnd, encode("open").as_ptr(), encode("https://github.com/kenjinote/LOGIC").as_ptr(), ptr::null(), ptr::null(), SW_SHOWDEFAULT);
+                },
+                _ => {}
             }
         },
         WM_DESTROY => PostQuitMessage(0),

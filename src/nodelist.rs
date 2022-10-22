@@ -61,9 +61,26 @@ impl NodeList {
         }
     }
 
+    pub fn delete(&mut self) {
+        for i in 0..self.list.len() {
+            if self.list[i].isselected() {
+                self.list[i].kill(self.current_generation);
+            }
+        }
+        self.current_generation += 1;
+    }
+
+    pub fn unselectall(&mut self) {
+        for i in 0..self.list.len() {
+            self.list[i].unselect();
+        }
+    }
+
     pub fn draw(&self, hdc : HDC) {
         for i in 0..self.list.len() {
-            self.list[i].draw(hdc);
+            if self.list[i].is_alive(self.current_generation) {
+                self.list[i].draw(hdc);
+            }
         }
     }
 }

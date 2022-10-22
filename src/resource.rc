@@ -28,6 +28,7 @@ END
           MENUITEM "&Delete\tDelete", 205
           MENUITEM SEPARATOR
           MENUITEM "&All Select\tCtrl+A", 206
+          MENUITEM "&All UnSelect\tCtrl+U", 207
      }
      POPUP "&View"
      {

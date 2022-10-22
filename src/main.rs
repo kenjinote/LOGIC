@@ -36,6 +36,7 @@ use winapi::{
 use std::ptr;
 use std::mem;
 use std::mem::MaybeUninit;
+use winapi::um::winuser::InvalidateRect;
 
 
 mod utility;
@@ -134,6 +135,18 @@ unsafe extern "system" fn win_proc(hwnd: HWND, msg: UINT, w_param: WPARAM, l_par
                 },
                 600 => {// Open URL
                     ShellExecuteW(hwnd, encode("open").as_ptr(), encode("https://github.com/kenjinote/LOGIC").as_ptr(), ptr::null(), ptr::null(), SW_SHOWDEFAULT);
+                },
+                205 => {// New
+                    nodelist.delete();
+                    InvalidateRect(hwnd, ptr::null(), 1);
+                },
+                206 => {// Select All
+                    nodelist.selectall();
+                    InvalidateRect(hwnd, ptr::null_mut(), 1);
+                },
+                207 => {// UnSelect All
+                    nodelist.unselectall();
+                    InvalidateRect(hwnd, ptr::null_mut(), 1);
                 },
                 _ => {}
             }

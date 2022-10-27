@@ -44,8 +44,9 @@ END
      POPUP "&Window"
      {
           MENUITEM "&Input Window", 500
-          MENUITEM "&Output Window", 500
-          MENUITEM "&Property Window", 500
+          MENUITEM "&Output Window", 501
+          MENUITEM "&Property Window", 502
+          MENUITEM "&Debug Window", 503
      }
      POPUP "&Help"
      {
@@ -66,4 +67,12 @@ BEGIN
     LTEXT           "LOGIC, バージョン 1.0",-1,42,14,114,8,128
     LTEXT           "Copyright (c) 2022-",-1,42,26,114,8
     DEFPUSHBUTTON   "OK",1,113,41,50,14,131072
+END
+
+5 DIALOGEX 0, 0, 170, 62
+STYLE -2134376248
+CAPTION "Debug"
+FONT 9, "MS UI Gothic"
+BEGIN
+    EDITTEXT 1, 0, 0, 170, 62, 128
 END

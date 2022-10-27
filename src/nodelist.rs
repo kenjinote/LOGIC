@@ -4,6 +4,7 @@ use crate::node::Node;
 pub struct NodeList {
     list: Vec<Node>,
     current_generation: u32,
+    max_generation: u32,
 }
 
 impl NodeList {
@@ -11,6 +12,14 @@ impl NodeList {
         NodeList {
             list: Vec::new(),
             current_generation: 0,
+            max_generation: 0,
+        }
+    }
+
+    pub fn next_generation(&mut self) {
+        self.current_generation += 1;
+        if self.current_generation > self.max_generation {
+            self.max_generation = self.current_generation;
         }
     }
 
@@ -49,7 +58,8 @@ impl NodeList {
 
     pub fn select(&mut self, x: f64, y: f64) {
         for i in 0..self.list.len() {
-            if self.list[i].hit_test(x, y, self.current_generation) {
+            if self.list[i].hit_test(x, y, self.current_generation)
+                && self.list[i].is_alive(self.current_generation) {
                 self.list[i].select();
             }
         }
@@ -57,7 +67,15 @@ impl NodeList {
 
     pub fn selectall(&mut self) {
         for i in 0..self.list.len() {
-            self.list[i].select();
+            if self.list[i].is_alive(self.current_generation) {
+                self.list[i].select();
+            }
+        }
+    }
+
+    pub fn unselectall(&mut self) {
+        for i in 0..self.list.len() {
+            self.list[i].unselect();
         }
     }
 
@@ -67,12 +85,26 @@ impl NodeList {
                 self.list[i].kill(self.current_generation);
             }
         }
-        self.current_generation += 1;
+        self.next_generation();
     }
 
-    pub fn unselectall(&mut self) {
-        for i in 0..self.list.len() {
-            self.list[i].unselect();
+    pub fn can_undo(&self) -> bool {
+        self.current_generation > 0
+    }
+
+    pub fn can_redo(&self) -> bool {
+        self.current_generation < self.max_generation
+    }
+
+    pub fn undo(&mut self) {
+        if self.current_generation > 0 {
+            self.current_generation -= 1;
+        }
+    }
+
+    pub fn redo(&mut self) {
+        if self.current_generation < self.max_generation {
+            self.current_generation += 1;
         }
     }
 

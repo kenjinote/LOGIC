@@ -80,4 +80,41 @@ impl Node {
         }
         return true;
     }
+
+    fn to_string(&self) -> String {
+        format!("Node: x: {}, y: {}, width: {}, height: {}, born: {}, death: {}, selected: {}", self.x, self.y, self.width, self.height, self.born, self.death, self.selected)
+    }
+
+    fn from_string(s: &str) -> Node {
+        let mut x = 0.0;
+        let mut y = 0.0;
+        let mut width = 0.0;
+        let mut height = 0.0;
+        let mut born = 0;
+        let mut death = 0;
+        let mut selected = false;
+        let mut i = 0;
+        for part in s.split(",") {
+            match i {
+                0 => x = part.parse().unwrap(),
+                1 => y = part.parse().unwrap(),
+                2 => width = part.parse().unwrap(),
+                3 => height = part.parse().unwrap(),
+                4 => born = part.parse().unwrap(),
+                5 => death = part.parse().unwrap(),
+                6 => selected = part.parse().unwrap(),
+                _ => (),
+            }
+            i += 1;
+        }
+        Node {
+            x: x,
+            y: y,
+            width: width,
+            height: height,
+            born: born,
+            death: death,
+            selected: selected,
+        }
+    }
 }
